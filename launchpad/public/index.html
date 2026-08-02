@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaunchPad — Student Career Tracker</title>
+<meta name="description" content="Track your DSA, LeetCode, GitHub, CGPA and resume readiness in one place. Built for India's engineering students.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="badge">🚀 Built for India's 9M+ Engineering Students</div>
+  <h1 class="hero">Your Career.<br><span class="grad">Tracked. Leveled. Launched.</span></h1>
+  <p class="hero-sub">Stop guessing what to learn next. LaunchPad tracks your DSA, LeetCode, GitHub, CGPA and tells you exactly what to do this week.</p>
+  <div class="hero-ctas">
+    <button class="btn-primary" onclick="openAuthModal('signup')">Get Started Free →</button>
+    <button class="btn-secondary" onclick="openAuthModal('login')">Sign In</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num" data-count="48200">0</div><div class="lbl">Active Students</div></div>
+    <div class="hero-stat"><div class="num" data-count="312">0</div><div class="lbl">Colleges Covered</div></div>
+    <div class="hero-stat"><div class="num" data-count="89">0</div><div class="lbl">Placement Rate %</div></div>
+    <div class="hero-stat"><div class="num" data-count="149">0</div><div class="lbl">Starting ₹/month</div></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <nav class="topnav">
+    <div class="nav-logo">Launch<span>Pad</span></div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="setTab(this,'overview')">Overview</button>
+      <button class="nav-link" onclick="setTab(this,'dsa')">DSA</button>
+      <button class="nav-link" onclick="setTab(this,'leetcode')">LeetCode</button>
+      <button class="nav-link" onclick="setTab(this,'resume')">Resume</button>
+    </div>
+    <div class="nav-right">
+      <div class="level-badge" id="planBadge">🆓 Free Plan</div>
+      <button class="avatar" id="logoutBtn" title="Sign out">⎋</button>
+    </div>
+  </nav>
+  <div class="dash-body">
+    <aside class="sidebar">
+      <button class="sidebar-item active" onclick="setSide(this)"><span class="sidebar-icon">🏠</span><span>Home</span></button>
+      <button class="sidebar-item" onclick="setSide(this)"><span class="sidebar-icon">🧠</span><span>AI Coach</span><span class="sidebar-badge">NEW</span></button>
+      <button class="sidebar-item" onclick="setSide(this)"><span class="sidebar-icon">⚡</span><span>DSA Track</span></button>
+      <button class="sidebar-item" onclick="syncLeetCode()"><span class="sidebar-icon">💻</span><span>LeetCode</span></button>
+      <button class="sidebar-item" onclick="syncGitHub()"><span class="sidebar-icon">🐙</span><span>GitHub</span></button>
+      <div class="sidebar-section">Career</div>
+      <button class="sidebar-item" onclick="openModal('resumeModal')"><span class="sidebar-icon">📄</span><span>Resume Score</span></button>
+      <button class="sidebar-item" onclick="setSide(this)"><span class="sidebar-icon">🎯</span><span>Mock Interviews</span></button>
+      <button class="sidebar-item" onclick="setSide(this)"><span class="sidebar-icon">🏆</span><span>Leaderboard</span></button>
+      <div class="sidebar-section">Billing</div>
+      <button class="sidebar-item" onclick="openModal('settingsModal')"><span class="sidebar-icon">⚙️</span><span>Settings</span></button>
+    </aside>
+
+    <main class="content">
+      <!-- XP BAR -->
+      <div class="xp-bar-wrap">
+        <div class="xp-avatar" id="xpAvatar">S</div>
+        <div class="xp-info">
+          <div class="xp-top">
+            <div class="xp-name" id="xpName">Student</div>
+            <div class="xp-level" id="xpLevelText">⚡ 0 / 500 XP to Level 2</div>
+          </div>
+          <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+          <div class="xp-sub"><span id="xpLevelLabel">Level 1</span><span id="xpSubPct">0% complete</span></div>
+        </div>
+        <div class="xp-streak" id="xpStreak">🔥 0-day streak</div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="section-header">
+        <div class="section-title">Your Progress Snapshot</div>
+        <button class="section-action" onclick="syncAll()">Sync Now ↗</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card sc-glow-cyan" onclick="syncLeetCode()">
+          <div class="sc-icon">💻</div>
+          <div class="sc-val ring-val" id="lcSolved">0</div>
+          <div class="sc-label">LeetCode Solved</div>
+        </div>
+        <div class="stat-card sc-glow-purple" onclick="setSide(this)">
+          <div class="sc-icon">🧠</div>
+          <div class="sc-val ring-val" id="dsaCount">0</div>
+          <div class="sc-label">DSA Topics Tracked</div>
+        </div>
+        <div class="stat-card sc-glow-lime" onclick="syncGitHub()">
+          <div class="sc-icon">🐙</div>
+          <div class="sc-val ring-val" id="ghCommits">0</div>
+          <div class="sc-label">GitHub Commits (yr)</div>
+        </div>
+        <div class="stat-card sc-glow-pink" onclick="openModal('settingsModal')">
+          <div class="sc-icon">📊</div>
+          <div class="sc-val" id="cgpaVal">—</div>
+          <div class="sc-label">CGPA (Current)</div>
+        </div>
+        <div class="stat-card sc-glow-cyan" onclick="openModal('resumeModal')">
+          <div class="sc-icon">📄</div>
+          <div class="sc-val ring-val" id="resumeScore">0</div>
+          <div class="sc-label">Resume Score</div>
+        </div>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="main-grid">
+        <div class="ai-card">
+          <div class="ai-header">
+            <div class="ai-icon">🤖</div>
+            <div>
+              <div class="ai-title">AI Career Coach</div>
+              <div class="ai-sub">Based on your real DSA progress</div>
+            </div>
+            <button class="btn-secondary" style="margin-left:auto;padding:8px 16px;font-size:0.8rem;" onclick="regenerateAI()">Refresh ↺</button>
+          </div>
+          <div class="ai-message" id="aiMsg">
+            Add a couple of DSA topics and hit refresh — your coach will build this week's plan around your weakest areas.
+          </div>
+          <div class="ai-tasks" id="aiTasks">
+            <div class="empty-state">No tasks yet — hit "Refresh" above to generate this week's plan.</div>
+          </div>
+        </div>
+
+        <div class="dsa-card">
+          <div class="section-header">
+            <div class="section-title">DSA Progress</div>
+            <button class="section-action" onclick="openModal('dsaModal')">+ Add Topic</button>
+          </div>
+          <div class="dsa-topics" id="dsaTopics">
+            <div class="empty-state">No topics yet — add your first one.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY HEATMAP -->
+      <div class="heatmap-card">
+        <div class="section-header">
+          <div class="section-title">Activity Heatmap · Last 24 Weeks</div>
+          <button class="section-action" onclick="openModal('logActivityModal')">+ Log Today</button>
+        </div>
+        <div class="heatmap-grid" id="heatmap"></div>
+        <div style="display:flex;gap:1rem;margin-top:0.75rem;font-size:0.72rem;color:var(--muted);align-items:center;">
+          <span>Less</span>
+          <div style="width:10px;height:10px;border-radius:2px;" class="h0"></div>
+          <div style="width:10px;height:10px;border-radius:2px;" class="h1"></div>
+          <div style="width:10px;height:10px;border-radius:2px;" class="h2"></div>
+          <div style="width:10px;height:10px;border-radius:2px;" class="h3"></div>
+          <div style="width:10px;height:10px;border-radius:2px;" class="h4"></div>
+          <span>More</span>
+        </div>
+      </div>
+
+      <div class="main-grid" style="grid-template-columns:1fr 340px;">
+        <!-- PRICING -->
+        <div class="plan-section">
+          <div class="section-header"><div class="section-title">💎 Upgrade Your Plan</div></div>
+          <div class="plan-cards">
+            <div class="plan-card">
+              <div class="plan-name">Starter</div>
+              <div class="plan-price">₹149<span>/mo</span></div>
+              <div class="plan-features">
+                <div class="plan-feat yes">DSA + LeetCode tracker</div>
+                <div class="plan-feat yes">Weekly AI coach plan</div>
+                <div class="plan-feat no">Mock interviews</div>
+                <div class="plan-feat no">Resume review</div>
+              </div>
+              <button class="plan-cta" data-plan-btn="starter" onclick="startCheckout('starter')">Choose Starter</button>
+            </div>
+            <div class="plan-card popular" style="border-color:rgba(0,245,255,0.4)">
+              <div class="plan-name" style="color:var(--cyan)">Pro</div>
+              <div class="plan-price">₹299<span>/mo</span></div>
+              <div class="plan-features">
+                <div class="plan-feat yes">Everything in Starter</div>
+                <div class="plan-feat yes">Unlimited mock interviews</div>
+                <div class="plan-feat yes">GitHub + LeetCode auto-sync</div>
+                <div class="plan-feat no">1:1 resume review</div>
+              </div>
+              <button class="plan-cta" data-plan-btn="pro" onclick="startCheckout('pro')">Choose Pro</button>
+            </div>
+            <div class="plan-card premium">
+              <div class="plan-name" style="color:var(--gold)">Placement Ready</div>
+              <div class="plan-price" style="color:var(--gold)">₹499<span>/mo</span></div>
+              <div class="plan-features">
+                <div class="plan-feat yes">Everything in Pro</div>
+                <div class="plan-feat yes">Human resume review</div>
+                <div class="plan-feat yes">Priority placement alerts</div>
+                <div class="plan-feat yes">1:1 monthly mentor call</div>
+              </div>
+              <button class="plan-cta gold" data-plan-btn="placement_ready" onclick="startCheckout('placement_ready')">Choose Placement Ready</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div class="lb-card">
+        <div class="section-header"><div class="section-title">🏆 Leaderboard</div></div>
+        <div id="leaderboardRows" style="display:flex;flex-direction:column;gap:4px;margin-top:1rem;">
+          <div class="empty-state">Loading…</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- AUTH MODAL (signup / login) -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <h2 id="authTitle">Create your account</h2>
+    <p>Track your career progress in one place — free to start.</p>
+    <form id="authForm">
+      <div class="modal-input-group" id="onboardFields">
+        <div>
+          <div class="modal-label">Full Name</div>
+          <input class="modal-input" id="obName" type="text" placeholder="e.g. Arjun Singh">
+        </div>
+        <div>
+          <div class="modal-label">College</div>
+          <input class="modal-input" id="obCollege" type="text" placeholder="e.g. NIT Surathkal">
+        </div>
+        <div>
+          <div class="modal-label">Year of Study</div>
+          <select class="modal-input" id="obYear">
+            <option>1st Year</option><option>2nd Year</option><option selected>3rd Year</option><option>4th Year</option>
+          </select>
+        </div>
+        <div>
+          <div class="modal-label">LeetCode Username (optional)</div>
+          <input class="modal-input" id="obLeetcode" type="text" placeholder="e.g. arjun_codes">
+        </div>
+        <div>
+          <div class="modal-label">GitHub Username (optional)</div>
+          <input class="modal-input" id="obGithub" type="text" placeholder="e.g. arjun-singh">
+        </div>
+      </div>
+      <div class="modal-input-group">
+        <div>
+          <div class="modal-label">Email</div>
+          <input class="modal-input" id="authEmail" type="email" required placeholder="you@college.edu">
+        </div>
+        <div>
+          <div class="modal-label">Password</div>
+          <input class="modal-input" id="authPassword" type="password" required minlength="6" placeholder="At least 6 characters">
+        </div>
+      </div>
+      <button class="btn-primary" id="authSubmitBtn" type="submit" style="width:100%;justify-content:center;">Create account →</button>
+    </form>
+    <div class="modal-switch" id="authSwitchText"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+    <h2>Settings</h2>
+    <p>Update your profile and connected accounts.</p>
+    <form id="settingsForm" onsubmit="return false;">
+      <div class="modal-input-group">
+        <div><div class="modal-label">CGPA</div><input class="modal-input" id="setCgpa" type="number" step="0.01" min="0" max="10" placeholder="e.g. 8.4"></div>
+        <div><div class="modal-label">LeetCode Username</div><input class="modal-input" id="setLeetcode" type="text"></div>
+        <div><div class="modal-label">GitHub Username</div><input class="modal-input" id="setGithub" type="text"></div>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveSettings()">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADD DSA TOPIC MODAL -->
+<div class="modal-overlay" id="dsaModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('dsaModal')">✕</button>
+    <h2>Add a DSA topic</h2>
+    <p>Track your progress on a topic — update the percentage as you go.</p>
+    <div class="modal-input-group">
+      <div><div class="modal-label">Topic</div><input class="modal-input" id="dsaTopicName" type="text" placeholder="e.g. Dynamic Programming"></div>
+      <div><div class="modal-label">Current progress (%)</div><input class="modal-input" id="dsaTopicPct" type="number" min="0" max="100" value="0"></div>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="addDsaTopic()">Add Topic</button>
+  </div>
+</div>
+
+<!-- LOG ACTIVITY MODAL -->
+<div class="modal-overlay" id="logActivityModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('logActivityModal')">✕</button>
+    <h2>Log today's activity</h2>
+    <p>How many problems did you solve today?</p>
+    <div class="modal-input-group">
+      <div><div class="modal-label">Problems solved</div><input class="modal-input" id="activityCount" type="number" min="0" value="1"></div>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="logActivity()">Save</button>
+  </div>
+</div>
+
+<!-- RESUME MODAL -->
+<div class="modal-overlay" id="resumeModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('resumeModal')">✕</button>
+    <h2>Resume Score</h2>
+    <p id="resumeModalSub">Add a score below to start tracking, or plug in a resume-parsing API later.</p>
+    <div class="modal-input-group">
+      <div><div class="modal-label">Overall score (0-100)</div><input class="modal-input" id="resumeScoreInput" type="number" min="0" max="100" value="0"></div>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveResumeScore()">Save Score</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg">Done!</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/payments.js"></script>
+<script src="js/integrations.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Small extra handlers that need currentUser/currentProfile from app.js scope
+  async function saveSettings() {
+    const cgpa = document.getElementById('setCgpa').value;
+    const leetcode = document.getElementById('setLeetcode').value.trim();
+    const github = document.getElementById('setGithub').value.trim();
+    const updates = {
+      cgpa: cgpa ? Number(cgpa) : null,
+      leetcode_username: leetcode || null,
+      github_username: github || null,
+    };
+    await supabaseClient.from('profiles').update(updates).eq('id', currentUser.id);
+    Object.assign(currentProfile, updates);
+    closeModal('settingsModal');
+    showToast('✅ Settings saved');
+    renderStatsFromDB();
+  }
+
+  async function addDsaTopic() {
+    const topic = document.getElementById('dsaTopicName').value.trim();
+    const pct = Number(document.getElementById('dsaTopicPct').value) || 0;
+    if (!topic) { showToast('⚠ Enter a topic name'); return; }
+    await supabaseClient.from('dsa_progress').upsert(
+      { user_id: currentUser.id, topic, percent: pct },
+      { onConflict: 'user_id,topic' }
+    );
+    document.getElementById('dsaTopicName').value = '';
+    document.getElementById('dsaTopicPct').value = 0;
+    closeModal('dsaModal');
+    showToast('✅ Topic added');
+    renderStatsFromDB();
+  }
+
+  async function logActivity() {
+    const count = Number(document.getElementById('activityCount').value) || 0;
+    const today = new Date().toISOString().slice(0, 10);
+    await supabaseClient.from('activity_log').upsert(
+      { user_id: currentUser.id, activity_date: today, problems_solved: count },
+      { onConflict: 'user_id,activity_date' }
+    );
+    closeModal('logActivityModal');
+    showToast('✅ Activity logged');
+    loadHeatmap();
+  }
+
+  async function saveResumeScore() {
+    const score = Number(document.getElementById('resumeScoreInput').value) || 0;
+    await supabaseClient.from('resume_scores').upsert({ user_id: currentUser.id, overall_score: score, updated_at: new Date().toISOString() });
+    closeModal('resumeModal');
+    showToast('✅ Resume score saved');
+    renderStatsFromDB();
+  }
+</script>
+</body>
+</html>

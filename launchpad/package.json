@@ -1,0 +1,17 @@
+{
+  "name": "launchpad-career-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LaunchPad — Student Career Tracker (DSA, LeetCode, GitHub, Resume, Placement readiness)",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "stripe": "^16.8.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
