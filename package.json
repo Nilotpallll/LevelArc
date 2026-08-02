@@ -1,15 +1,26 @@
 {
-  "name": "launchpad-career-tracker",
+  "name": "levelarc-career-tracker",
   "version": "1.0.0",
   "private": true,
-  "description": "LaunchPad — Student Career Tracker (DSA, LeetCode, GitHub, Resume, Placement readiness)",
+  "type": "module",
+  "description": "LevelArc — Student Career Tracker (DSA, LeetCode, GitHub, Resume, Placement readiness)",
   "scripts": {
-    "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host"
   },
   "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "@supabase/supabase-js": "^2.45.0",
     "stripe": "^16.8.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "vite": "^5.4.10"
   },
   "engines": {
     "node": ">=18"

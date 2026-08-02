@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #f3f4f6;
+  background: #0a0e1a;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(124,58,237,0.2), transparent 30%),
+    linear-gradient(180deg, #0a0e1a 0%, #090d18 100%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+#bg-canvas {
+  background: radial-gradient(circle at center, rgba(0,245,255,0.12), transparent 35%);
+}
+
+button {
+  font: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.ambient-orb {
+  position: fixed;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.3;
+  pointer-events: none;
+  animation: floatOrb 12s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.orb-1 {
+  width: 260px;
+  height: 260px;
+  left: 8%;
+  top: 14%;
+  background: rgba(124, 58, 237, 0.4);
+}
+
+.orb-2 {
+  width: 320px;
+  height: 320px;
+  right: 10%;
+  bottom: 8%;
+  background: rgba(0, 245, 255, 0.28);
+  animation-delay: 3s;
+}
+
+.card-tilt {
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  will-change: transform;
+}
+
+.card-tilt:hover {
+  box-shadow: 0 0 25px rgba(124, 58, 237, 0.2);
+}
+
+.button-glow {
+  animation: pulseGlow 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes floatOrb {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(14px, -30px, 0) scale(1.08);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 18px rgba(124, 58, 237, 0.18);
+  }
+  100% {
+    box-shadow: 0 0 34px rgba(0, 245, 255, 0.22);
+  }
+}

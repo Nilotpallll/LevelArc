@@ -1,5 +1,5 @@
 -- ============================================================================
--- LaunchPad — Supabase schema
+-- LevelArc — Supabase schema
 -- Run this once in Supabase: Project → SQL Editor → New query → paste → Run
 -- ============================================================================
 

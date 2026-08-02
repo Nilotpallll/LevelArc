@@ -1,4 +1,4 @@
-# LaunchPad — Student Career Tracker
+# LevelArc — Student Career Tracker
 
 A real, deployable version of the tracker: student accounts, a Postgres database,
 Stripe subscriptions, and live LeetCode/GitHub syncing.
@@ -69,7 +69,7 @@ Without a token, GitHub stats fall back to public repo/follower counts only
 
 ### D. Deploy to Vercel
 1. Push this folder to a GitHub repo, then [import it in Vercel](https://vercel.com/new).
-2. **Project Settings → Environment Variables** → add every key from `.env.example` with your real values (including `SITE_URL` = your Vercel domain, e.g. `https://launchpad.vercel.app`).
+2. **Project Settings → Environment Variables** → add every key from `.env.example` with your real values (including `SITE_URL` = your Vercel domain, e.g. `https://levelarc.vercel.app`).
 3. Deploy.
 4. Back in **Stripe → Developers → Webhooks → Add endpoint**:
    - URL: `https://YOUR-DOMAIN/api/stripe-webhook`
